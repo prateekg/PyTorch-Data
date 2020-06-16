@@ -1,0 +1,50 @@
+# Loaded Datasets
+import torch
+import torchvision
+import torchvision.transforms as transforms
+
+trainset = torchvision.datasets.CIFAR10(root="./data", download=True, transform = tranforms.ToTensor())
+for i in range(len(trainset)):
+  Image: trainset[i][0].size()
+  Label: trainset[i][1]
+
+
+# Plot the Image
+import matplotlib.pyplot as plt
+torchimage = trainset[0][0]
+npimage = torchimage.permute(1,2,0) ## changes the axis (C, H, W) to (H, W, C)
+plt.imshow(npimage)
+
+
+# DataLoader
+# We will see that in a deep learning model, we may not always want to load images one at a time or load 
+# them in the same order each time. For this, and other reasons, it is often better to use the 
+# torch.utils.data.DataLoader object. DataLoader provides a multipurpose iterator to sample the data in a 
+# specified way, such as in batches, or shuffled. It is also a convenient place to assign workers in multiprocessor environments. 
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=True)
+dataiter = iter(trainloader)
+image, labels = dataiter.next()
+
+
+
+# Transform
+tforms = tranforms.Compose([transforms.GrayScale(3), transforms.CenterCrop(300), transforms.ToTensor()])
+
+
+# ImageFolder
+# We can see that the main function of the dataset object is to take a sample from a dataset, and the 
+# function of DataLoader is to deliver a sample, or a batch of samples, to a deep learning model for evaluation. 
+# One of the main things to consider when writing our own dataset object is how do we build a data structure in 
+# accessible memory from data that is organized in files on a disk. A common way we might want to organize data 
+# is in folders named by class. Let's say that, for this example, we have three folders named toy, notoy, and scenes, 
+# contained in a parent folder, images. Each of these folders represent the label of the files contained within them. 
+# We need to be able to load them while retaining them as separate labels. Happily, there is a class for this, and like 
+#most things in PyTorch, it is very easy to use. The class is torchvision.datasets.ImageFolder and it is used as follows:
+
+from torchvision import datasets
+datafromfolders = datasets.ImageFolder(root='./images', transforms = tforms)
+folderloader = DataLoader(datafromfolders, batch_size=4, shuffle=True)
+
+
+# Concatenating Datasets
+concat = torch.utils.data.ConcatDataset([dataset1, dataset2, ...., datasetn])
