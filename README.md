@@ -2,6 +2,8 @@
 Understand the functioning of data loading and how important it is to successfully implement any deep learning model.
 
 
+
+
 Pytorch includes data loaders for several datasets to help you get started. The torch.dataloader is the class used for loading datasets. The following is a list of the included torch datasets and a brief description:
 
 # MNIST
